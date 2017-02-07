@@ -1,8 +1,3 @@
-INCLUDE_DIRECTORIES(${INCLUDES})
-if(SYSTEM_INCLUDES)
-	INCLUDE_DIRECTORIES(SYSTEM ${SYSTEM_INCLUDES})
-endif()
-
 FILE(GLOB EXAMPLES_CPP RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
 IF (NOT USE_MOSEK)
@@ -10,6 +5,7 @@ IF (NOT USE_MOSEK)
 ENDIF ()
 
 LIST(REMOVE_ITEM EXAMPLES_CPP
+	"converter_jade_bss.cpp"
 	"classifier_bagging_liblinear.cpp"
 	"classifier_larank.cpp"
 	"classifier_latent_svm.cpp"
@@ -38,13 +34,14 @@ LIST(REMOVE_ITEM EXAMPLES_CPP
 	"structure_discrete_hmsvm_bmrm.cpp"
 	"structure_hmsvm_mosek.cpp"
 	"structure_plif_hmsvm_bmrm.cpp"
+	"variational_approx_example.cpp"
 )
 
 FOREACH(EXAMPLE_CPP ${EXAMPLES_CPP})
 	STRING(REGEX REPLACE ".cpp\$" "" EXAMPLE "${EXAMPLE_CPP}")
 
 	add_executable(${EXAMPLE} ${CMAKE_CURRENT_SOURCE_DIR}/${EXAMPLE_CPP})
-	target_link_libraries(${EXAMPLE} shogun ${SANITIZER_LIBRARY})
+	target_link_libraries(${EXAMPLE} shogun::shogun ${SANITIZER_LIBRARY})
 	IF(SANITIZER_FLAGS)
 		set_target_properties(${EXAMPLE} PROPERTIES COMPILE_FLAGS ${SANITIZER_FLAGS})
 	ENDIF()
